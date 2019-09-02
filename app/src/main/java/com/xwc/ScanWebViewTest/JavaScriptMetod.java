@@ -21,7 +21,7 @@ public class JavaScriptMetod {
     private Context mContext;
     private WebView mWebView;
 
-    public static final String JAVAINTERFACE = "javainterface";
+    public static final String JAVAINTERFACE = "javaInterface";
 
     public JavaScriptMetod(Activity activity, Context context, WebView webView) {
         mActivity = activity;
@@ -44,11 +44,14 @@ public class JavaScriptMetod {
 
     @JavascriptInterface
     public void sweepCode() {
-        new IntentIntegrator(mActivity).setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES)
+        Toast.makeText(mActivity, "扫码", Toast.LENGTH_SHORT).show();
+        new IntentIntegrator(mActivity)
+                .setCaptureActivity(ScanActivity.class)
+                .setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES)
                 .setPrompt("请对准二维码")
-                .setCameraId(0)
-                .setBeepEnabled(false)
-                .setBarcodeImageEnabled(true)
+                .setCameraId(0) // 前置或后置
+                .setBeepEnabled(false) // 是否哔一声
+                .setBarcodeImageEnabled(true) // 扫码后是否生成二维码图片
                 .initiateScan();
     }
 }

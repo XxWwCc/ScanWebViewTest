@@ -6,9 +6,13 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.ArrayMap;
+import android.util.Log;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.Toast;
+
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -39,7 +43,7 @@ public class WebViewTest extends AppCompatActivity {
         JavaScriptMetod m = new JavaScriptMetod(this, this, webView);
         webView.addJavascriptInterface(m, JavaScriptMetod.JAVAINTERFACE);
 
-
+        webView.loadUrl("http://116.62.168.126/wc/");
 //        webView.setWebViewClient(new WebViewClient() {
 //            @Override
 //            public boolean shouldOverrideUrlLoading(WebView view, String url) {
@@ -104,6 +108,22 @@ public class WebViewTest extends AppCompatActivity {
                 e.printStackTrace();
             }
             return;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        if (result != null) {
+            if (result.getContents() == null) {
+                Toast.makeText(this, "cancelled", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(this, "scanned:" + result.getContents(), Toast.LENGTH_LONG).show();
+                Log.e("TAG", result.getContents());
+                webView.loadUrl("http://192.168.101.182:8080/wc/#/suesCode?code=" + result.getContents());
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
         }
     }
 
